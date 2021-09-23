@@ -1,5 +1,6 @@
 import { useFormik } from 'formik'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
 import { registerUserAction } from '../../../../redux/slices/users/userSlices'
@@ -29,6 +30,9 @@ const Register = () => {
     validationSchema: formSchema
   })
 
+  const storeData = useSelector(store => store.users)
+  const { loading, appErr, serverErr, registered } = storeData
+
   return (
     <>
       <section className="relative py-20 2xl:py-40 bg-gray-800 overflow-hidden">
@@ -51,8 +55,8 @@ const Register = () => {
                   <h3 className="mb-10 text-2xl text-white font-bold font-heading">
                     Register Account
                     {/* display error message*/}
+                    {appErr || serverErr ? <div className='text-red-400'>{serverErr} {appErr}</div>: null}
                   </h3>
-
                   {/* First name */}
                   <div className="flex items-center pl-6 mb-3 bg-white rounded-full">
                     <span className="inline-block pr-3 py-2 border-r border-gray-50">
@@ -250,7 +254,7 @@ const Register = () => {
                   <div className="inline-flex mb-10"></div>
 
                   {/* Check for loading */}
-                   (<button
+                  {loading ?  (<button
                       disabled
                       className="py-4 w-full bg-gray-500  text-white font-bold rounded-full transition duration-200"
                     >
@@ -263,7 +267,7 @@ const Register = () => {
                     >
                       Register
                     </button>
-                  )
+                  )}
                 </form>
               </div>
             </div>
