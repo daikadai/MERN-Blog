@@ -2,6 +2,7 @@ import { useFormik } from 'formik'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { Redirect } from 'react-router'
 import * as Yup from 'yup'
 import { registerUserAction } from '../../../../redux/slices/users/userSlices'
 
@@ -33,6 +34,11 @@ const Register = () => {
   const storeData = useSelector(store => store.users)
   const { loading, appErr, serverErr, registered } = storeData
 
+  //redirect
+  if(registered) {
+    return <Redirect to='/profile'/>
+  }
+  
   return (
     <>
       <section className="relative py-20 2xl:py-40 bg-gray-800 overflow-hidden">
