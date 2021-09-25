@@ -35,6 +35,8 @@ export const loginUserAction = createAsyncThunk(
         }
       }
       const { data } = await axios.post(`${baseUrl}/users/login`, userData, config)
+      //save user into local storage
+      localStorage.setItem('userInfo', JSON.stringify(userData))
       return data
     } catch (error) {
       if(!error?.response) {
@@ -42,7 +44,7 @@ export const loginUserAction = createAsyncThunk(
       }
       return rejectWithValue(error?.response?.data)
     }
-)
+  })
 
 //slices
 const usersSlices = createSlice({
@@ -66,8 +68,25 @@ const usersSlices = createSlice({
       state.loading = false
       state.appErr = action?.payload?.message
       state.serverErr = action?.error?.message
-    }),
+    })
 
+    // login
+    builder.addCase(loginUserAction.pending, (state, action) => {
+      state.loading = true
+      state.appErr = undefined
+      state.serverErr = undefined
+    })
+    builder.addCase(loginUserAction.fulfilled, (state, action) => {
+      state.loading = false
+      state.userAuth = action?.payload
+      state.appErr = undefined
+      state.serverErr = undefined
+    })
+    builder.addCase(loginUserAction.rejected, (state, action) => {
+      state.loading = false
+      state.appErr = action?.payload?.message
+      state.serverErr = action?.error?.message
+    })
   }
 })
 
