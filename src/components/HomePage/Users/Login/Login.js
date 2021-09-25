@@ -1,29 +1,33 @@
-import poster from "../../../../img/poster.png";
-import * as Yup from 'yup'
+import poster from "../../../../img/poster.png"
+import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
+import { loginUserAction } from "../../../../redux/slices/users/userSlices";
+import { useSelector } from "react-redux";
 //Form Schema
 const formSchema = Yup.object({
-  email: Yup.string().required('Email is required'),
-  password: Yup.string().required('Password is required'),
-})
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 const Login = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { loading, registered, appErr, serverErr } = useSelector(
+    (state) => state.users
+  );
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
       email: "",
-      password: ""
+      password: "",
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
+      dispatch(loginUserAction(values));
       console.log(values);
     },
-    validationSchema: formSchema
-  })
+    validationSchema: formSchema,
+  });
   return (
     <>
-       <section className="min-h-screen relative py-20 2xl:py-40 bg-gray-900 overflow-hidden">
+      <section className="min-h-screen relative py-20 2xl:py-40 bg-gray-900 overflow-hidden">
         <div className="absolute top-0 left-0 lg:bottom-0 h-full lg:h-auto w-full lg:w-4/12 bg-violet-500 lg:overflow-hidden">
           <img
             className="hidden lg:block h-full w-full object-cover"
@@ -129,7 +133,7 @@ const Login = () => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g clip-path="url(#clip0)">
+                    <g clipPath="url(#clip0)">
                       <path
                         d="M36.2292 29.2917H0.770833C0.345333 29.2917 0 28.9463 0 28.5208C0 28.0953 0.345333 27.75 0.770833 27.75H36.2292C36.6547 27.75 37 28.0953 37 28.5208C37 28.9463 36.6547 29.2917 36.2292 29.2917Z"
                         fill="white"
@@ -170,7 +174,7 @@ const Login = () => {
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
